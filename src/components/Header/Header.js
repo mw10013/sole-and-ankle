@@ -23,6 +23,7 @@ const Header = () => {
           <NavLink href="/kids">Kids</NavLink>
           <NavLink href="/collections">Collections</NavLink>
         </Nav>
+        <SideElement />
       </MainHeader>
     </header>
   );
@@ -32,19 +33,22 @@ const MainHeader = styled.div`
   padding: 0 32px;
   border-bottom: 1px solid ${COLORS.gray[300]};
   display: flex;
-  justify-content: center;
-  position: relative;
+  align-items: baseline;
+  gap: 10px;
 `;
 
 const LogoWrapper = styled.div`
-  position: absolute;
-  top: 21px;
-  left: 32px;
+  flex: 1 5 370px;
+`;
+
+const SideElement = styled.div`
+  flex: 1 5 370px;
 `;
 
 const Nav = styled.nav`
   display: flex;
-  gap: 48px;
+  justify-content: space-between;
+  flex: 2 1 650px;
 `;
 
 const NavLink = styled.a`
