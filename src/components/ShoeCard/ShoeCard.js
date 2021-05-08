@@ -6,32 +6,6 @@ import { COLORS, WEIGHTS } from "../../constants";
 import { formatPrice, pluralize, isNewShoe } from "../../utils";
 import Spacer from "../Spacer";
 
-const CONFIGS = {
-  "new-release": {
-    flagStyles: {
-      "--backgroundColor": COLORS.secondary,
-    },
-    flagText: "Just Release!",
-    priceStyles: {
-      "--textDecoration": "none",
-    },
-  },
-  "on-sale": {
-    flagStyles: {
-      "--backgroundColor": COLORS.primary,
-    },
-    flagText: "Sale",
-    priceStyles: {
-      "--textDecoration": "line-through",
-    },
-  },
-  default: {
-    priceStyles: {
-      "--textDecoration": "none",
-    },
-  },
-};
-
 const ShoeCard = ({
   slug,
   name,
@@ -57,21 +31,29 @@ const ShoeCard = ({
     : isNewShoe(releaseDate)
       ? 'new-release'
       : 'default'
-  const config = CONFIGS[variant];
 
   return (
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
         <ImageWrapper>
           <Image alt="" src={imageSrc} />
-          {config.flagText && (
-            <Flag style={config.flagStyles}>{config.flagText}</Flag>
+          {variant === "new-release" && (
+            <NewReleaseFlag>Just Released!</NewReleaseFlag>
           )}
+          {variant === "on-sale" && <OnSaleFlag>Sale</OnSaleFlag>}
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price style={config.priceStyles}>{formatPrice(price)}</Price>
+          <Price
+            style={{
+              "--color": variant === "on-sale" ? COLORS.gray[700] : undefined,
+              "--text-decoration":
+                variant === "on-sale" ? "line-through" : undefined,
+            }}
+          >
+            {formatPrice(price)}
+          </Price>
         </Row>
         <Row>
           <ColorInfo>{pluralize("Color", numOfColors)}</ColorInfo>
@@ -104,11 +86,20 @@ const Flag = styled.div`
   top: 12px;
   right: -4px;
   height: 32px;
-  padding: 8px;
+  line-height: 32px;
+  padding: 0 10px;
   border-radius: 2px;
   font-size: ${14 / 16}rem;
+  font-weight: ${WEIGHTS.bold};
   color: ${COLORS.white};
-  background: var(--backgroundColor);
+`;
+
+const NewReleaseFlag = styled(Flag)`
+  background: ${COLORS.secondary};
+`;
+
+const OnSaleFlag = styled(Flag)`
+  background: ${COLORS.primary};
 `;
 
 const Row = styled.div`
@@ -123,7 +114,8 @@ const Name = styled.h3`
 `;
 
 const Price = styled.span`
-  text-decoration: var(--textDecoration);
+  color: var(--color);
+  text-decoration: var(--text-decoration);
 `;
 
 const ColorInfo = styled.p`
